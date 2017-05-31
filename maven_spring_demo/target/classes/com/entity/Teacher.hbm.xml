@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"E:/workspace/maven_spring_demo/src/main/webapp/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2017-5-24 21:39:41 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.entity.Teacher" table="TEACHER" dynamic-insert="true" dynamic-update="true">
+    	<cache usage="read-write"/>
+        <id name="tId" type="int" access="field">
+            <column name="T_ID" />
+            <generator class="native" />
+        </id>
+        
+        <property name="tName" type="java.lang.String" access="field">
+            <column name="T_NAME" />
+        </property>
+        <property name="tSalary" type="java.lang.Double" access="field">
+            <column name="T_SALARY" />
+        </property>
+        <property name="tIdcard" type="java.lang.String" access="field">
+            <column name="T_IDCARD" />
+        </property>
+        <property name="tAge" type="java.lang.Integer" access="field">
+            <column name="T_AGE" />
+        </property>
+        <!-- 配置多对一关系 -->
+        <many-to-one name="tSex" class="com.entity.Dictionary"
+			column="T_SEX" lazy="false" fetch="join"></many-to-one>
+        
+        
+        
+        <property name="tHeadImg" type="java.lang.String" access="field">
+            <column name="T_HEAD_IMG" />
+        </property>
+        <property name="tStartdate" type="java.sql.Date" access="field">
+            <column name="T_STARTDATE" />
+        </property>
+        <property name="tEnddate" type="java.sql.Date" access="field">
+            <column name="T_ENDDATE" />
+        </property>
+        
+        <many-to-one name="tState" insert="false" class="com.entity.Dictionary"
+			column="T_STATE" lazy="false" fetch="join"></many-to-one>
+        
+    </class>
+    
+</hibernate-mapping>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"E:/workspace/maven_spring_demo/src/main/webapp/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+       <!--  可以使用spring数据源
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.password">123456</property>
+        <property name="hibernate.connection.url">jdbc:mysql:///</property>
+        <property name="hibernate.connection.username">root</property> -->
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+        <property name="hibernate.hbm2ddl.auto">none</property>
+        <!-- 跟spring整合时不要加这句，这样，才能将 Hibernate 的 session 交给 Spring 来管理，而 Spring 才能使用切面方法，对 DAO 中的方法进行管理
+        <property name="hibernate.current_session_context_class">thread</property> 
+        <property name="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</property>
+        -->
+        <!-- 二级缓存
+        这是hibernate3的，跟4不一样  4要配hibernate.cache.region.factory_class
+        <property name="hibernate.cache.provider_class">net.sf.ehcache.hibernate.EhCacheProvider</property>
+        -->
+        <property name="hibernate.cache.use_second_level_cache">true</property>
+        <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
+   		<property name="hibernate.cache.provider_configuration_file_resource_path">hibernate/ehcache.xml</property>
+   		<property name="hibernate.cache.use_query_cache">true</property>
+    </session-factory>
+</hibernate-configuration>

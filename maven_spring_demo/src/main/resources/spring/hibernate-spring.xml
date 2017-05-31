@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="mysqlDataSource"></property>
+		<property name="configLocation" value="classpath:hibernate/hibernate.cfg.xml"></property>
+		<property name="mappingLocations" value="classpath:com/entity/*.hbm.xml"></property>
+		
+	
+	</bean>
+	
+	<!-- hibernate的事务配置
+		1.配置事务管理器
+		2.配置事务属性
+		3.配置事务切点，并把事务切点和事务属性关联
+	  -->
+	 <bean id="hibernateTransactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+	 	<property name="sessionFactory" ref="sessionFactory"></property>
+	 </bean>
+	 <!-- hibernate的查询方法必须有事务    query* -->
+	 <tx:advice id="hibernateAdvice" transaction-manager="hibernateTransactionManager">
+	 	<tx:attributes>
+	 		<tx:method name="insert*" propagation="REQUIRED" />
+	 		<tx:method name="update*" propagation="REQUIRED" />
+	 		<tx:method name="delete*" propagation="REQUIRED" />
+	 		<tx:method name="query*" propagation="REQUIRED" />
+	 	</tx:attributes>
+	 </tx:advice>
+	 <aop:config>
+	 	<aop:pointcut expression="execution(* com.service.hibernateimpls..*(..))" id="pointcut"/>
+	 	<aop:advisor advice-ref="hibernateAdvice" pointcut-ref="pointcut"/>
+	 </aop:config>
+	
+	
+</beans>

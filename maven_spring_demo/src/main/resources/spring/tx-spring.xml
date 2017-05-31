@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<!-- 声明式事务3步走
+				1.设置JDBC事务管理器
+				2.启动事务注解
+				3.在service方法上使用注解@Transactional
+				@Transactional(propagation=Propagation.REQUIRES_NEW‘事务传播级别’,isolation=Isolation.READ_COMMITTED‘事务隔离级别’)
+	 
+	JDBC事务管理器 
+	<bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="mysqlDataSource"></property>
+	</bean>
+	 启动事务注解 
+	<tx:annotation-driven transaction-manager="dataSourceTransactionManager"/>
+	-->
+	<!-- xml配置事务3步走
+				1.设置JDBC事务管理器
+				2.配置事务属性，传播方式，隔离级别。。
+				3.使用AOP配置事务切入点
+	 -->
+	<!-- JDBC事务管理器  -->
+	<bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="mysqlDataSource"></property>
+	</bean>
+	
+	<tx:advice id="txAdvice" transaction-manager="dataSourceTransactionManager">
+		<tx:attributes>
+			<tx:method name="insert*" propagation="REQUIRED"/>
+			<tx:method name="query*" propagation="REQUIRES_NEW" read-only="true"/>
+			<tx:method name="update*" propagation="REQUIRES_NEW"/>
+			<tx:method name="delete*" propagation="REQUIRES_NEW"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- 配置事务切入点   同时将aop:advisor和tx:advice关联起来-->
+	<aop:config>
+		<aop:pointcut expression="execution(* com.service.jdbcimpls..*(..))" id="txPointcut"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+	</aop:config>
+</beans>

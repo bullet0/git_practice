@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"  
+							"http://struts.apache.org/dtds/struts-2.1.dtd">  
+<struts>  
+	<!-- 上传 -->
+	<constant name="struts.multipart.saveDir" value="/tmpuploadfiles" />
+	<constant name="struts.multipart.maxSize" value="4441455"></constant>
+	<constant name="struts.action.extension" value="do"></constant>
+   	<constant name="struts.configuration.xml.reload" value="true" />
+   	<constant name="struts.devMode" value="true" />
+   	<constant name="struts.objectFactory" value="spring" />
+   	<constant name="struts.enable.DynamicMethodInvocation" value="false" /> 
+   	
+   	<package name="default" extends="json-default" namespace="/">     	
+   
+	   	<interceptors>
+	   		<interceptor name="parameterHandle" class="com.interceptor.ParameterHandleInterceptor"></interceptor>
+	   		<interceptor-stack name="myDefault">
+				<interceptor-ref name="parameterHandle"></interceptor-ref>
+				<interceptor-ref name="fileUpload"></interceptor-ref>
+				<interceptor-ref name="defaultStack"/>
+			</interceptor-stack>
+	   	
+	   	</interceptors>
+	   	<global-results>
+	    	<result name="error" type="redirect">/errorpage/error.jsp</result>
+		</global-results>
+	   
+			
+   	
+   	<!-- 整合spring后class指向IOC容器中bean的id -->
+   		<action name="teacher_*" class="teacherAction" method="{1}">
+   			
+   			<result name="show">/view/teacher/show.jsp</result>
+   			<result name="toShow" type="redirect">/teacher_queryListByPage.do</result>
+   			<result name="update">/view/teacher/update.jsp</result>
+   			<result name="input">/666.jsp</result>	
+   			
+   			<result name="checkName" type="json">
+   				<param name="root">flag</param>
+   			</result>	
+   			
+   			 <result name="download" type="stream">  
+               <param name="contentType">multipart/form-data</param>  
+               <param name="contentDisposition">attachment;fileName="${excelName}.xls"</param>  
+               <param name="inputName">excelStream</param>  
+               <param name="bufferSize">1024</param>  
+           </result> 
+   			<interceptor-ref name="myDefault"></interceptor-ref>
+   		</action>
+   	</package>
+   	
+</struts>  
